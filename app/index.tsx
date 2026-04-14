@@ -1,3 +1,4 @@
+import ChatBubble from "@/components/ChatBubble";
 import axios from "axios";
 import { Stack } from "expo-router";
 import React, { useRef, useState } from "react";
@@ -14,11 +15,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ChatBubble from "@/components/ChatBubble";
 
 // Replace with your machine's local IP when testing on a physical device
 // e.g. "http://192.168.1.x:3000/chat"
-const API_URL = "http://localhost:3000/chat";
+// const API_URL = "http://localhost:3000/chat";
+const API_URL = "http://192.168.0.110:3000/chat";
 
 type Message = {
   role: "user" | "assistant";
@@ -76,13 +77,14 @@ export default function ChatScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]} edges={["bottom"]}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: colors.background }]}
+      edges={["bottom"]}
+    >
       <Stack.Screen
         options={{
           title: "ChatBuddy",
-          headerRight: () => (
-            <View style={[styles.onlineDot, { backgroundColor: "#22C55E" }]} />
-          ),
+          headerRight: () => <View style={[styles.onlineDot, { backgroundColor: "#22C55E" }]} />,
         }}
       />
 
@@ -116,14 +118,23 @@ export default function ChatScreen() {
 
         {loading && (
           <View style={[styles.typingRow, { backgroundColor: colors.background }]}>
-            <View style={[styles.typingBubble, { backgroundColor: isDark ? "#1E1E2A" : "#FFFFFF" }]}>
+            <View
+              style={[styles.typingBubble, { backgroundColor: isDark ? "#1E1E2A" : "#FFFFFF" }]}
+            >
               <ActivityIndicator size="small" color="#6C63FF" />
-              <Text style={[styles.typingText, { color: colors.subtle }]}>ChatBuddy is typing…</Text>
+              <Text style={[styles.typingText, { color: colors.subtle }]}>
+                ChatBuddy is typing…
+              </Text>
             </View>
           </View>
         )}
 
-        <View style={[styles.inputBar, { backgroundColor: colors.inputBar, borderTopColor: colors.border }]}>
+        <View
+          style={[
+            styles.inputBar,
+            { backgroundColor: colors.inputBar, borderTopColor: colors.border },
+          ]}
+        >
           <TextInput
             style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
             placeholder="Message ChatBuddy…"
@@ -141,8 +152,7 @@ export default function ChatScreen() {
             style={({ pressed }) => [
               styles.sendButton,
               {
-                backgroundColor:
-                  !input.trim() || loading ? colors.sendDisabled : "#6C63FF",
+                backgroundColor: !input.trim() || loading ? colors.sendDisabled : "#6C63FF",
                 opacity: pressed ? 0.8 : 1,
               },
             ]}
