@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import Markdown from "react-native-markdown-display";
 
 type Props = {
   role: "user" | "assistant";
@@ -9,6 +10,76 @@ type Props = {
 export default function ChatBubble({ role, content }: Props) {
   const isDark = useColorScheme() === "dark";
   const isUser = role === "user";
+
+  const textColor = isUser ? "#FFFFFF" : isDark ? "#E8E8F0" : "#1A1A2E";
+  const codeBackground = isUser ? "rgba(255,255,255,0.15)" : isDark ? "#0F0F13" : "#F0EFFE";
+
+  const markdownStyles = {
+    body: {
+      color: textColor,
+      fontSize: 15,
+      lineHeight: 22,
+    },
+    strong: {
+      fontWeight: "700" as const,
+      color: textColor,
+    },
+    em: {
+      fontStyle: "italic" as const,
+      color: textColor,
+    },
+    bullet_list: {
+      marginVertical: 4,
+    },
+    ordered_list: {
+      marginVertical: 4,
+    },
+    list_item: {
+      color: textColor,
+      fontSize: 15,
+      lineHeight: 22,
+      flexDirection: "row" as const,
+    },
+    bullet_list_icon: {
+      color: textColor,
+      fontSize: 15,
+      lineHeight: 22,
+      marginRight: 6,
+    },
+    code_inline: {
+      backgroundColor: codeBackground,
+      color: isUser ? "#FFFFFF" : "#6C63FF",
+      borderRadius: 4,
+      paddingHorizontal: 4,
+      fontFamily: "monospace",
+      fontSize: 13,
+    },
+    fence: {
+      backgroundColor: codeBackground,
+      borderRadius: 8,
+      padding: 10,
+      marginVertical: 6,
+    },
+    code_block: {
+      backgroundColor: codeBackground,
+      borderRadius: 8,
+      padding: 10,
+      marginVertical: 6,
+      color: textColor,
+      fontFamily: "monospace",
+      fontSize: 13,
+    },
+    paragraph: {
+      marginTop: 0,
+      marginBottom: 4,
+      color: textColor,
+      fontSize: 15,
+      lineHeight: 22,
+    },
+    heading1: { color: textColor, fontWeight: "700" as const, fontSize: 18, marginBottom: 4 },
+    heading2: { color: textColor, fontWeight: "700" as const, fontSize: 16, marginBottom: 4 },
+    heading3: { color: textColor, fontWeight: "600" as const, fontSize: 15, marginBottom: 4 },
+  };
 
   return (
     <View style={[styles.row, isUser ? styles.rowUser : styles.rowAssistant]}>
@@ -27,9 +98,11 @@ export default function ChatBubble({ role, content }: Props) {
               : styles.bubbleAssistantLight,
         ]}
       >
-        <Text style={[styles.text, isUser ? styles.textUser : isDark ? styles.textDark : styles.textLight]}>
-          {content}
-        </Text>
+        {isUser ? (
+          <Text style={styles.textUser}>{content}</Text>
+        ) : (
+          <Markdown style={markdownStyles}>{content}</Markdown>
+        )}
       </View>
     </View>
   );
@@ -57,6 +130,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 8,
     marginBottom: 2,
+    flexShrink: 0,
   },
   avatarText: {
     color: "#FFFFFF",
@@ -87,17 +161,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#1E1E2A",
     borderBottomLeftRadius: 4,
   },
-  text: {
-    fontSize: 15,
-    lineHeight: 22,
-  },
   textUser: {
     color: "#FFFFFF",
-  },
-  textLight: {
-    color: "#1A1A2E",
-  },
-  textDark: {
-    color: "#E8E8F0",
+    fontSize: 15,
+    lineHeight: 22,
   },
 });
